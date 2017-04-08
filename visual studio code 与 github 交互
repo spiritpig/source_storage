@@ -1,0 +1,9 @@
+首先下载visual sutdio code
+然后下载git
+
+然后登陆github，创建新的repository（或者使用已有的repository的url）
+然后，打开终端，输入如下语句
+git remote add origin “repository_url”
+git pull origin master --allow-unrelated-histories
+
+之后就可以publish到自己的github仓库了

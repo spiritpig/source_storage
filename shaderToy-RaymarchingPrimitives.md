@@ -375,7 +375,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     tot /= float(AA*AA);
 #endif
 
-    
+    // test commit
     fragColor = vec4( tot, 1.0 );
 }
 ```
