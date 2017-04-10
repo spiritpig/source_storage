@@ -1,0 +1,281 @@
+1、UE的脚本分为两种，C++和blueprint（蓝图）
+When it comes to establishing object associations and asset assignment, it is far easier to do this in Blueprint as you have the power of the Editor at your disposal.
+当需要建立对象之间的关联和资源分配时，使用蓝图完成任务更加简单，因为，你可以利用编辑器的便利特性。
+
+2、在Actor（或其他类）的 构造函数 中， 初始化其成员，加载资源
+
+3、CreateDefaultSubobject函数用来创建组件或者子对象
+https://docs-origin.unrealengine.com/latest/INT/API/Runtime/CoreUObject/UObject/FObjectInitializer/CreateDefaultSubobject/2/index.html
+ConstructObject 用于在构造函数中，创建非UObject。（不需要在场景中有显示的物体可以用该函数创建）
+
+4、delegate函数 声明需要带，UFUNCTION()宏
+
+5、UObject类是所有类的基类
+
+6、UCLASS(minimalapi), 指定其后紧跟的类其中的函数无法被外部的其他类访问
+感觉是私有类的概念
+
+7、坐标系： Z轴朝上，X轴朝前，Y轴朝右
+
+8、GetWorld()->SpawnActor 函数，动态生产Actor
+
+9、暂停游戏，使用PlayerController中的SetPause
+void ABountyDashGameMode::SetGamePaused(bool gamePaused) 
+{ 
+	APlayerController* myPlayer = GetWorld()->GetFirstPlayerController(); 
+	if (myPlayer != nullptr) ??? 
+	{ 
+		myPlayer->SetPause(gamePaused); ??? 
+	} 
+}
+
+10、在項目中使用數據表格
+https://docs-origin.unrealengine.com/latest/INT/Gameplay/DataDriven/index.html
+
+11、使用AddImpulseAtLocation函數可以對物體施加一個推力
+
+12、查找场景中存在的对象使用以下方法，
+	for (TActorIterator<ACameraActor> It(GetWorld()); It; ++It)
+	{
+		if (It->GetName() == TEXT("mainCamera"))
+		{
+			Camera = *It;
+			break;
+		}
+	}
+	
+	还有一个FindObject函数，不过，似乎不好用
+
+13、在BeginPlay函数中，没有调用Super::BeginPlay()会导致Tick函数无法调用
+
+14、Interface中，定义纯虚函数可以使用以下语法
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Table")
+	int32 GetLength() const;
+
+15、在UserWidget中，使用WidgetTree的ConstructWidget函数创建UI控件
+
+16、蓝图中， 可以使用Construct objcet from class 创建UMG 控件
+
+17、使用HorizentalBox和VerticalBox可以实现将文本控件垂直居中的效果
+
+18、重载UUserWidget类的 RebuildWidget函数时， 有时会出现RootWidget为创建的问题。
+	此时需要手动创建RootWidget，并且，父类的RebuildWidget必须在，RootWidget创建完成 
+	并赋值给WidgetTree->RootWidget之后，调用。
+	因为父类的RebuldWidget会完成，对根节点内部的Slate控件的创建过程。若根节点为空则无法创建
+	
+19、控制台下的，RestartLevel命令可以重新开始关卡
+
+20、被标记为Uproperty的成员变量才能被GC自动回收
+关于UE4的 GC: http://docs.unrealengine.com/latest/CHN/Programming/UnrealArchitecture/Objects/Optimizations/index.html
+	
+21、声明抽象类
+http://docs.unrealengine.com/latest/CHN/Programming/UnrealArchitecture/Reference/Classes/Specifiers/Abstract/index.html
+	
+22、创建小地图
+https://wiki.unrealengine.com/UMG_Mini-Map
+
+23、SpeedTreeColorVaration节点会为，树添加随机颜色。 不需要就删掉。
+	同时，树在导入的时候，有是否导入随机颜色的设置，不需要就取消勾选
+	
+24、天空球颜色， 若需要手动调节天空球的颜色，需要去掉Colors Determined By Sun
+
+25、开启反射平面，需要打开项目设置 -> 引擎 -> Rendering -> Support global clip plane for Planar Reflection 选项
+
+26、材质的金属色，会影响反射的程度
+
+27、利用spawnactor函数产生的actor若希望接受输入，需要自己产生一个inputcomponet组件，用于处理输入
+
+28、在构造函数当中，物理刚体未创建
+
+29、利用Project Launcher 生成 Patching 文件时， 需预先生成Release版本，并将其Pak文件复制到，工程目录下的 Releases\版本号\生成的平台名  目录下
+如， 版本号为1.0， 平台名为 WindowsNoEditor 则目录为 Releases\1.0\WindowsNoEditor
+文档： https://docs.unrealengine.com/latest/CHN/Engine/Deployment/Patching/index.html
+
+30、UE4， 開啟物理模擬的物體，若需暫時停止使用PutRigidBodyToSleep
+使用SetSimulatePhysics函數關閉物理模擬，容易出現奇怪的情況
+
+31、变更项目的图标，图标文件需满足，尺寸为256x256，ico文件
+
+32、UMG 的 ui缩放，由 project setting中， User Interface 一栏的 UI Scale Curve控制，调整该曲线，可以调整UI的缩放比例
+
+33、反射平面中，默认会投射物体的阴影。对于如歌程序的反射平面不需要投射阴影，关闭其投射阴影，可以提高FPS。
+具体设置：关闭Scene Capture下的 Lighting Components Show Flags 中的 Dynamic Shadow选项。
+
+34、C++类使用中， 使用 
+	UFUNCTION(BlueprintImplementableEvent) 或
+	UFUNCTION(BlueprintNativeEvent)  修饰成员函数，可以让 蓝图 实现该函数的函数体。 UI可以使用该特性，在CPP中，从服务器拉取数据， UI蓝图实现 UI的更新。同时，还可以为 函数添加修饰符
+	UFUNCTION(BlueprintCallable, Category = "Kaopu")，此时，该函数可以被 蓝图 调用。 这样可以实现由 蓝图 调用 CPP中 提供的更新函数，由CPP完成数据拉取。 再由CPP，在数据准备完成后，调用 蓝图 中的 UI更新函数。 完成更新。
+	
+35、image控件，没有Hover事件。 若需要hover事件，可以放置一个Border控件，将 颜色值中的 Alpha 设为0. 之后绑定Border控件的 OnMouseMove事件。
+
+36、UI的英文版素材暂行方案： 重写UImage, UButton控件类， 添加一个函数用于设置Sprite到Brush中。
+
+void SetBrushFromSprite(UPaperSprite *pSpr)
+{
+    Brush.SetResourceObject(pSpr);
+
+    if (MyImage.IsValid())
+    {
+        MyImage->SetImage(&Brush);
+    }
+}
+
+void SetStyleFromSprite(
+                UPaperSprite *pSprNor, UPaperSprite *pSprHovered, 
+                UPaperSprite *pSprPress, UPaperSprite *pSprDisable)
+{
+    WidgetStyle.Normal.SetResourceObject(pSprNor);
+    WidgetStyle.Hovered.SetResourceObject(pSprHovered);
+    WidgetStyle.Pressed.SetResourceObject(pSprPress);
+    WidgetStyle.Disabled.SetResourceObject(pSprDisable);
+
+    if (MyButton.IsValid())
+    {
+        MyButton->SetButtonStyle(&WidgetStyle);
+    }
+}
+
+37、Menu Anchor控件用来 制作popup menu， 它只负责产生控件，使用时，需要提供一个预先创建的控件蓝图， 创建时 可以重写OnGetMenuContent，来控制创建过程，比如说，储存弹出的控件的引用。 Open 函数打开， Close 函数 关闭。
+
+
+38、UMG， 若需要创建蓝图控件的子类，除指定其父类以外， 还需要将 父类的 控件 全部复制到子类中。 同时，在父类中勾选了Is Variable的控件， 在子类中都要去掉。
+
+
+39、关闭使用 键盘，上下左右键，在按钮上产生的虚线框（Focusable）
+https://answers.unrealengine.com/questions/288774/removing-dashed-border-around-focused-buttons.html
+具体操作在  编辑 -> 项目设置 -> User Interface -> Focus -> Render Focus Rule 调整为NEVER 即可，关闭其显示。
+
+
+40、可以使用Get Desired Size() - ScrollBar的Size的方式 获取ScrollBar的最大Scroll Offset，前提是， 滚动框必须能拿到Size 并且，在Construct以后，才能正确获取。
+
+
+41、RHI = Rendering Hardware Interface
+
+
+42、-nodebuginfo 选项。 打包时，不产生调试信息
+
+
+43、热度图控件，计算球的位置。
+	（1）、获取球的位置Pwb（世界坐标）及果岭环包围盒
+	（2）、变换球的坐标系，由世界坐标系，变换为，以热度图控件左上角为原点的UI坐标系，分两步
+		1）、球位置 减去 果岭环包围盒的左上角，将原点变换为果岭环的左上角
+		2）、乘以，由果岭环的世界坐标，变换为UI坐标的缩放比率
+	（3）、由于热度图的贴图中，果岭一般不会填满整张贴图，故实际的图中果岭左上角，不是贴图的左上角。故需要再加上途中果岭左上角的坐标，完成变换。
+		由于果岭一般是居中放置，故左上角的位置可以由 贴图的长宽 减去 果岭区域的长宽得到。
+			
+	公式为： Pui = (Pball - Pgreen) * world2UIRate * HeatMapImg2ControlRate + (SizeHeatMapControl - SizeGreenRectInImg * HeatMapImg2ControlRate)
+
+	变量解释，Pui 为最终球在控件中的坐标， Pball球的世界坐标，Pgreen果岭环包围盒的左上角坐标， 
+                  world2UIRate， 世界坐标到UI坐标的变换系数，可以由 世界中果岭长宽 / 贴图中果岭长宽
+		  SizeHeatMapControl 热度图控件的 尺寸
+		  SizeGreenRectInImg 热度图贴图的 尺寸
+		  HeatMapImg2ControlRate 热度图贴图尺寸 到 热度图控件尺寸 的转换比率
+		  
+
+如图，果岭区域为贴图内侧的矩形
+ -----------------------
+|                       |
+|   ----------------    |
+|  |		        |   |
+|  |                |   |
+|  |    果岭        |   |
+|  |                |   |
+|  |                |   |
+|   ----------------    |
+|                       |
+ -----------------------
+
+
+
+44、 使用Widget Component实现 3DUI，将UMG UI附加到Acor上
+
+45、 Detaching from existing linker for ../../../rg_unreal/Content/Blueprints/rg_GameMode_BP.uasset while object rg_GameMode_BP_C /Game/Blueprints/rg_GameMode_BP.Default__rg_GameMode_BP_C needs loaded
+	出现这个神秘的BUG， 似乎是4.15的BUG。 暂时，将Gamemode的蓝图版本删掉，换成使用cpp版本
+
+
+46、 mesh 在距离摄像机一定距离后，shadow会隐藏到的问题（具体距离，与模型的尺寸有关）
+	需要调整一些参数， 开启Dynamic Inset Shadow选项
+	调整有关阴影的参数
+	[/Script/Engine.RendererSettings]
+	r.Shadow.FadeResolution=16
+	r.Shadow.MinResolution=16
+	r.Shadow.TexelsPerPixel=3
+	r.Shadow.RadiusThreshold=0.01
+
+
+重点攻关：
+1、键盘输入：
+在项目设置中，绑定Action。为对应的动作取名并分配按键。
+之后，在代码中，绑定对应的处理函数即可
+    playerStart組件控制，球的生成位置
+    綁定Action的回調函數完成鍵盤處理
+    使用AddImplusAtLocation函數完成擊球
+
+
+2、地形，使用fbx模型作为地形。
+	有可能会有重复加载的贴图，需要手动删除。
+	通过LineTrace函数，获取玩家所在区域的物理材质，通过物理材质名获取玩家所处的区域。
+
+3、UI界面，支持錨點，不過，需要UI界面根據分辨率進行縮放的行爲，仍然需要自己定義
+
+4、LoadingScreen的效果可以使用Streaming Level实现。
+	Loading界面一个Level， UI界面单独一个Level，每个球场的每个洞单独一个Level。 进入游戏时，先加载Loading Level。 然后，在Loading 界面加载UI Level。 
+	之后，在UI Level中，根据情况选择加载的球场。 Level名可以是， 球场名_洞号
+
+5、球场的动态加载，使用UE4自带的DLC方式，保持版本号不变
+
+6、热度图生成， 使用热度图生成工具生成。 需提供，仅包含果岭、果岭环和洞杯的obj模型，果岭和果岭环需合并为一个物体,命名为N，洞杯命名为HOLE。 同时，为了热度图的质量，需要 细分模型。经验来看，最终的obj模型，有7000个面产生的热度图。 细节就足够了。
+
+
+7、为了应对未来需要从磁盘上设置文件的情况
+rama的Victory插件，似乎包含，从磁盘读取的函数
+如下，
+UTexture2D* UVictoryBPFunctionLibrary::Victory_LoadTexture2D_FromFile(const FString& FullFilePath,EJoyImageFormats ImageFormat, bool& IsValid,int32& Width, int32& Height)
+{
+	IsValid = false;
+	UTexture2D* LoadedT2D = NULL;
+	
+	IImageWrapperModule& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(FName("ImageWrapper"));
+	
+	IImageWrapperPtr ImageWrapper = ImageWrapperModule.CreateImageWrapper(GetJoyImageFormat(ImageFormat));
+ 
+	//Load From File
+	TArray<uint8> RawFileData;
+	if (!FFileHelper::LoadFileToArray(RawFileData, * FullFilePath)) 
+	{
+		return NULL;
+	}
+	
+	  
+	//Create T2D!
+	if (ImageWrapper.IsValid() && ImageWrapper->SetCompressed(RawFileData.GetData(), RawFileData.Num()))
+	{ 
+		const TArray<uint8>* UncompressedBGRA = NULL;
+		if (ImageWrapper->GetRaw(ERGBFormat::BGRA, 8, UncompressedBGRA))
+		{
+			LoadedT2D = UTexture2D::CreateTransient(ImageWrapper->GetWidth(), ImageWrapper->GetHeight(), PF_B8G8R8A8);
+			
+			//Valid?
+			if (!LoadedT2D) 
+			{
+				return NULL;
+			}
+			
+			//Out!
+			Width = ImageWrapper->GetWidth();
+			Height = ImageWrapper->GetHeight();
+			 
+			//Copy!
+			void* TextureData = LoadedT2D->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_WRITE);
+			FMemory::Memcpy(TextureData, UncompressedBGRA->GetData(), UncompressedBGRA->Num());
+			LoadedT2D->PlatformData->Mips[0].BulkData.Unlock();
+
+			//Update!
+			LoadedT2D->UpdateResource();
+		}
+	}
+	 
+	// Success!
+	IsValid = true;
+	return LoadedT2D;
+}
