@@ -1,0 +1,5 @@
+贝塞尔曲线公式，https://en.wikipedia.org/wiki/B%C3%A9zier_curve
+二项式系数表达式，https://zh.wikipedia.org/wiki/%E4%BA%8C%E9%A0%85%E5%BC%8F%E4%BF%82%E6%95%B8
+游戏中可以使用贝塞尔曲线， 模拟平滑的曲线， 2次贝塞尔曲线有3个控制点， 3次贝塞尔曲线有4个控制点
+
+B样条曲线还在研究中，计划通过 《计算机图形学与几何造型导论》 了解 Bezier curve 和 b-spline
