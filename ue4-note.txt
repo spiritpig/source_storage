@@ -279,3 +279,25 @@ UTexture2D* UVictoryBPFunctionLibrary::Victory_LoadTexture2D_FromFile(const FStr
 	IsValid = true;
 	return LoadedT2D;
 }
+
+8、 国际化
+关于locaization dashboard的使用看这个链接
+https://forums.unrealengine.com/showthread.php?63394-Localization-Dashboard-preview-and-explanation-of-UE4-s-text-localization-process&p=250553
+
+c++内的文字使用，nsloctext包裹。在namespace,key,text全部相同的情况下，内部的国际化系统会自动，替换内容为对应语言的文本。
+由于vs默认的文件编码为，gb2312（中文windows），而UE4内部的 locaization dashboard 解析源码，获取文本需要的是，UTF8编码。
+故不推荐 nsloctext的 第三个参数，写中文。具体内容可以在locaization dashboard中改(每种语言都可以单独改，对应的显示内容)
+
+然后，在游戏中切换语言的话，可以使用 
+SetCulture函数,可以封装一下，供 蓝图 使用
+
+    /* Change Localization at Runtime. */
+    UFUNCTION(BlueprintCallable, meta = (DisplayName = "Change Localization"), Category = "Locale")
+    static void changeLocalization(FString target)
+	{
+ 	   FInternationalization::Get().SetCurrentCulture(target);
+	}
+
+同时，还要注意，packing 里面Internationalization Support 中选择 ，EFIGSCJK(支持中英文)
+同时，选择cooked的语言时，选择 en-Us（美式英语） 和 zh-Hans（简体中文）
+对于不需要国际化的FText，在UI中一定要把Localization选为NO
