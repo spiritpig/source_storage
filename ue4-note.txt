@@ -197,10 +197,13 @@ https://answers.unrealengine.com/questions/288774/removing-dashed-border-around-
 	需要调整一些参数， 开启Dynamic Inset Shadow选项
 	调整有关阴影的参数
 	[/Script/Engine.RendererSettings]
-	r.Shadow.FadeResolution=16
-	r.Shadow.MinResolution=16
+	r.Shadow.FadeResolution=8
+	r.Shadow.MinResolution=8
 	r.Shadow.TexelsPerPixel=3
 	r.Shadow.RadiusThreshold=0.01
+
+47、由于，Button的禁用状态，会给子控件蒙上一层灰色的Color，所以，可以使用Hit Test Invisible模拟禁用状态。这样可以自定义子控件的禁用状态了
+	不过，要记得在SynchronizeProperties中同步属性
 
 
 重点攻关：
@@ -301,3 +304,7 @@ SetCulture函数,可以封装一下，供 蓝图 使用
 同时，还要注意，packing 里面Internationalization Support 中选择 ，EFIGSCJK(支持中英文)
 同时，选择cooked的语言时，选择 en-Us（美式英语） 和 zh-Hans（简体中文）
 对于不需要国际化的FText，在UI中一定要把Localization选为NO
+
+划重点：：：  需要给翻译的文本加中文的话，直接在对应语言的archive文件里该内容即可。 在需要的地方加入 \r\n。 在编辑器里面因为，会自动转移反斜杠，故任何转义字符都打不进去。都会被当作文本看待
+
+UE4 UnrealEngine4 虚幻4 Physical Water Surface模拟真实水面, 文件在百度网盘中
