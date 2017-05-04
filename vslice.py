@@ -6,7 +6,7 @@
 #
 # 修改切分部分，允许图元之间存在间隙，同时允许输入，行数列数
 #
-# spritePig <wuanshi5@gmail.com> 4-5-2016
+# spiritPig <wuanshi5@gmail.com> 4-5-2016
 #
 
 import sys, os
