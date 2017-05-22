@@ -205,6 +205,8 @@ https://answers.unrealengine.com/questions/288774/removing-dashed-border-around-
 47、由于，Button的禁用状态，会给子控件蒙上一层灰色的Color，所以，可以使用Hit Test Invisible模拟禁用状态。这样可以自定义子控件的禁用状态了
 	不过，要记得在SynchronizeProperties中同步属性
 
+48、小地图的旋转公式， http://www.euclideanspace.com/maths/algebra/vectors/angleBetween/
+
 
 重点攻关：
 1、键盘输入：
