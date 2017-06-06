@@ -318,8 +318,8 @@ UE4 UnrealEngine4 虚幻4 Physical Water Surface模拟真实水面, 文件在百
 		要实现该功能，可以利用Build.cs，添加包含路径和库文件的功能，示例如下，
 		if(Target.Platform == UnrealTargetPlatform.Win32) 
         {
-            PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, "RGDevice/include"));
-            PublicAdditionalLibraries.Add(Path.Combine(ThirdPartyPath, "libs", "RGDevice.lib"));
+            PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, "HardwareDevice/include"));
+            PublicAdditionalLibraries.Add(Path.Combine(ThirdPartyPath, "libs", "HardwareDevice.lib"));
         }
 		这样处理，当运行编辑器时，是64位则不会包含 传感器的库文件
 		当打包时，32位，则会包含该库文件。
@@ -327,7 +327,7 @@ UE4 UnrealEngine4 虚幻4 Physical Water Surface模拟真实水面, 文件在百
     2)、传感器 导入 lib文件的语句，需要注意，32位的lib需要保证只在32位导入，示例如下，
 		#if _WIN32 || _WIN64
 		#if !_WIN64
-		#pragma comment(lib, "..\\libs\\N1P2_Recog.lib")
+		#pragma comment(lib, "..\\libs\\ku1.lib")
 		#endif
 		#endif // _WIN32
     3)、使用到传感器API的地方，暂时只能在32位下使用，也需要包含如第二条一样条件编译。
