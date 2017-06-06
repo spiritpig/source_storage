@@ -310,3 +310,25 @@ SetCulture函数,可以封装一下，供 蓝图 使用
 划重点：：：  需要给翻译的文本加中文的话，直接在对应语言的archive文件里该内容即可。 在需要的地方加入 \r\n。 在编辑器里面因为，会自动转移反斜杠，故任何转义字符都打不进去。都会被当作文本看待
 
 UE4 UnrealEngine4 虚幻4 Physical Water Surface模拟真实水面, 文件在百度网盘中
+
+
+9、 传感器工程，接入客户端注意事项：
+
+	1)、目前传感器的dll只有32位，所以，64位下不需要加载其库文件.
+		要实现该功能，可以利用Build.cs，添加包含路径和库文件的功能，示例如下，
+		if(Target.Platform == UnrealTargetPlatform.Win32) 
+        {
+            PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, "RGDevice/include"));
+            PublicAdditionalLibraries.Add(Path.Combine(ThirdPartyPath, "libs", "RGDevice.lib"));
+        }
+		这样处理，当运行编辑器时，是64位则不会包含 传感器的库文件
+		当打包时，32位，则会包含该库文件。
+
+    2)、传感器 导入 lib文件的语句，需要注意，32位的lib需要保证只在32位导入，示例如下，
+		#if _WIN32 || _WIN64
+		#if !_WIN64
+		#pragma comment(lib, "..\\libs\\N1P2_Recog.lib")
+		#endif
+		#endif // _WIN32
+    3)、使用到传感器API的地方，暂时只能在32位下使用，也需要包含如第二条一样条件编译。
+		64位下，不做任何事情。
