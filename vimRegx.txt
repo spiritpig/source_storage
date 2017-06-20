@@ -1,0 +1,9 @@
+%s/\(.*(\)TEXT("\/Game\/shengyin\/China\/\(.*\)")\(.*\)/\tcurSoundPath = strSoundPathPrefix + TEXT("\/\2");\r\1curSoundPath\3/g
+ strSoundPathPrefix += TEXT("\/\2");
+
+
+替换声音的加载方式
+%s/Const.*::.*<\(.*\)> .*(\*\(.*\));\n.*\n.*\n\(.*\) = .*;/pWave = Cast<\1>(LoadObject(\1::StaticClass(), nullptr, \2));\r    if (pWave != nullptr)\r    {\r\3 = pWave;/g
+
+将输出的传感器数据，替换为，C++代码中的 赋值语句。方便进行离线数据测试（利用生成的数据，在没有传感器的情况下，在电脑上测试）
+:%s/Time: \(\w*\.\w*\), Position: X=\(-*\w*\.\w*\) Y=\(-*\w*\.\w*\) Z=\(-*\w*\.\w*\), Velocity: X=\(-*\w*\.\w*\) Y=\(-*\w*\.\w*\) Z=\(-*\w*\.\w*\)/{\r\tFTrackData NData;\r\tNData.Time = \1;\r\tNData.Position = FVector(\2f, \3f, \4f);\r\tNData.Velocity = FVector(\2f, \3f, \4f);\r}/g
